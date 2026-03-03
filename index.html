@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PTE Solutions — Score Your Best</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+–bg: #0C0C0F;
+–surface: #141418;
+–surface2: #1C1C22;
+–border: rgba(255,255,255,0.08);
+–ink: #F2F0EB;
+–muted: rgba(242,240,235,0.45);
+–accent: #C8F135;
+–accent2: #3B82F6;
+–accent3: #FF6B35;
+}
+
+html { scroll-behavior: smooth; }
+body {
+font-family: ‘Plus Jakarta Sans’, sans-serif;
+background: var(–bg);
+color: var(–ink);
+overflow-x: hidden;
+}
+
+/* PASSWORD GATE */
+#gate {
+position: fixed; inset: 0; z-index: 9999;
+background: var(–bg);
+display: flex; flex-direction: column;
+align-items: center; justify-content: center;
+gap: 0;
+}
+.gate-logo {
+font-family: ‘Fraunces’, serif;
+font-size: 2rem; font-weight: 700;
+color: var(–ink); margin-bottom: 8px;
+letter-spacing: -0.02em;
+}
+.gate-logo span { color: var(–accent); }
+.gate-sub { color: var(–muted); font-size: 0.9rem; margin-bottom: 40px; }
+.gate-box {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 20px;
+padding: 40px;
+width: 360px;
+text-align: center;
+}
+.gate-box h2 {
+font-family: ‘Fraunces’, serif;
+font-size: 1.4rem; font-weight: 600;
+margin-bottom: 8px;
+}
+.gate-box p { color: var(–muted); font-size: 0.88rem; margin-bottom: 28px; }
+.gate-input {
+width: 100%; padding: 14px 18px;
+background: var(–surface2); border: 1px solid var(–border);
+border-radius: 12px; color: var(–ink);
+font-family: ‘Plus Jakarta Sans’, sans-serif;
+font-size: 1rem; outline: none; margin-bottom: 16px;
+transition: border-color 0.2s;
+letter-spacing: 0.1em;
+}
+.gate-input:focus { border-color: var(–accent); }
+.gate-btn {
+width: 100%; padding: 14px;
+background: var(–accent); color: #0C0C0F;
+border: none; border-radius: 12px;
+font-family: ‘Plus Jakarta Sans’, sans-serif;
+font-size: 0.95rem; font-weight: 700;
+cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+}
+.gate-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.gate-error {
+color: #FF6B6B; font-size: 0.82rem;
+margin-top: 10px; display: none;
+}
+.gate-shake { animation: shake 0.4s ease; }
+@keyframes shake {
+0%,100%{transform:translateX(0)}
+20%{transform:translateX(-8px)}
+40%{transform:translateX(8px)}
+60%{transform:translateX(-6px)}
+80%{transform:translateX(6px)}
+}
+
+/* SITE (hidden until unlocked) */
+#site { display: none; }
+
+/* NAV */
+nav {
+position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+display: flex; align-items: center; justify-content: space-between;
+padding: 18px 52px;
+background: rgba(12,12,15,0.8);
+backdrop-filter: blur(16px);
+border-bottom: 1px solid var(–border);
+}
+.logo {
+font-family: ‘Fraunces’, serif;
+font-size: 1.35rem; font-weight: 700;
+letter-spacing: -0.02em;
+}
+.logo span { color: var(–accent); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+text-decoration: none; color: var(–muted);
+font-size: 0.88rem; font-weight: 500;
+transition: color 0.2s;
+}
+.nav-links a:hover { color: var(–ink); }
+.nav-wa {
+display: flex; align-items: center; gap: 8px;
+background: #25D366; color: #fff;
+padding: 10px 20px; border-radius: 100px;
+font-size: 0.85rem; font-weight: 600;
+text-decoration: none;
+transition: opacity 0.2s, transform 0.15s;
+}
+.nav-wa:hover { opacity: 0.88; transform: translateY(-1px); }
+.nav-wa svg { width: 16px; height: 16px; fill: #fff; }
+
+/* HERO */
+.hero {
+min-height: 100vh;
+padding: 140px 52px 80px;
+position: relative; overflow: hidden;
+display: flex; flex-direction: column; justify-content: center;
+}
+.hero-noise {
+position: absolute; inset: 0; pointer-events: none;
+background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23n)’ opacity=‘0.04’/%3E%3C/svg%3E”);
+opacity: 0.5;
+}
+.hero-glow {
+position: absolute; top: -200px; right: -200px;
+width: 700px; height: 700px; border-radius: 50%;
+background: radial-gradient(circle, rgba(200,241,53,0.07) 0%, transparent 65%);
+pointer-events: none;
+}
+.hero-glow2 {
+position: absolute; bottom: -150px; left: -100px;
+width: 500px; height: 500px; border-radius: 50%;
+background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 65%);
+pointer-events: none;
+}
+.hero-badge {
+display: inline-flex; align-items: center; gap: 8px;
+border: 1px solid rgba(200,241,53,0.3);
+background: rgba(200,241,53,0.08);
+color: var(–accent);
+padding: 6px 16px; border-radius: 100px;
+font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em;
+text-transform: uppercase; margin-bottom: 32px;
+width: fit-content;
+animation: fadeUp 0.6s 0.1s both;
+}
+.hero-badge::before { content: ‘’; width: 6px; height: 6px; background: var(–accent); border-radius: 50%; }
+.hero h1 {
+font-family: ‘Fraunces’, serif;
+font-size: clamp(3.2rem, 7.5vw, 7rem);
+font-weight: 700; line-height: 1.0;
+letter-spacing: -0.03em;
+max-width: 900px;
+animation: fadeUp 0.6s 0.25s both;
+}
+.hero h1 .line2 { color: var(–accent); font-style: italic; }
+.hero h1 .line3 { color: var(–muted); font-weight: 300; }
+.hero-desc {
+font-size: 1.1rem; color: var(–muted); font-weight: 300;
+max-width: 480px; line-height: 1.75;
+margin-top: 32px;
+animation: fadeUp 0.6s 0.4s both;
+}
+.hero-actions {
+display: flex; gap: 14px; align-items: center;
+margin-top: 44px;
+animation: fadeUp 0.6s 0.55s both;
+}
+.btn-accent {
+background: var(–accent); color: #0C0C0F;
+padding: 15px 34px; border-radius: 100px;
+font-weight: 700; font-size: 0.95rem;
+text-decoration: none;
+transition: transform 0.15s, box-shadow 0.2s;
+box-shadow: 0 0 40px rgba(200,241,53,0.25);
+}
+.btn-accent:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(200,241,53,0.35); }
+.btn-ghost {
+border: 1px solid var(–border); color: var(–ink);
+padding: 15px 34px; border-radius: 100px;
+font-weight: 500; font-size: 0.95rem;
+text-decoration: none;
+transition: border-color 0.2s, background 0.2s;
+}
+.btn-ghost:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); }
+
+.hero-stats {
+display: flex; gap: 52px; margin-top: 72px;
+padding-top: 52px;
+border-top: 1px solid var(–border);
+animation: fadeUp 0.6s 0.7s both;
+}
+.stat { }
+.stat-n {
+font-family: ‘Fraunces’, serif;
+font-size: 2.4rem; font-weight: 700;
+line-height: 1; color: var(–accent);
+}
+.stat-l { font-size: 0.82rem; color: var(–muted); margin-top: 4px; }
+
+/* SERVICES */
+.section { padding: 100px 52px; }
+.sec-label {
+font-size: 0.75rem; letter-spacing: 0.12em;
+text-transform: uppercase; color: var(–accent);
+font-weight: 600; margin-bottom: 12px;
+}
+.sec-title {
+font-family: ‘Fraunces’, serif;
+font-size: clamp(2rem, 4vw, 3.2rem);
+font-weight: 700; letter-spacing: -0.02em;
+line-height: 1.1; max-width: 560px;
+margin-bottom: 60px;
+}
+.sec-title em { font-style: italic; color: var(–muted); font-weight: 300; }
+
+.services-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 20px;
+}
+.scard {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 20px; padding: 40px;
+position: relative; overflow: hidden;
+transition: border-color 0.25s, transform 0.2s;
+cursor: default;
+}
+.scard:hover {
+border-color: rgba(200,241,53,0.25);
+transform: translateY(-3px);
+}
+.scard-num {
+font-family: ‘Fraunces’, serif;
+font-size: 4rem; font-weight: 700;
+color: rgba(255,255,255,0.04);
+position: absolute; top: 20px; right: 28px;
+line-height: 1;
+user-select: none;
+}
+.scard-icon {
+width: 52px; height: 52px;
+border-radius: 14px;
+display: flex; align-items: center; justify-content: center;
+font-size: 1.5rem; margin-bottom: 24px;
+}
+.scard-title {
+font-family: ‘Fraunces’, serif;
+font-size: 1.35rem; font-weight: 600;
+margin-bottom: 12px; letter-spacing: -0.01em;
+}
+.scard-desc { color: var(–muted); font-size: 0.9rem; line-height: 1.7; margin-bottom: 24px; }
+.scard-price {
+display: inline-flex; align-items: center; gap: 6px;
+background: rgba(200,241,53,0.1); border: 1px solid rgba(200,241,53,0.2);
+color: var(–accent); padding: 6px 14px; border-radius: 100px;
+font-size: 0.82rem; font-weight: 600;
+}
+.icon-green { background: rgba(200,241,53,0.1); }
+.icon-blue { background: rgba(59,130,246,0.1); }
+.icon-orange { background: rgba(255,107,53,0.1); }
+.icon-purple { background: rgba(168,85,247,0.1); }
+
+/* PRICING */
+.pricing-section { background: var(–surface); }
+.pricing-grid {
+display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+}
+.pcard {
+background: var(–bg);
+border: 1px solid var(–border);
+border-radius: 20px; padding: 36px 32px;
+position: relative;
+transition: border-color 0.25s;
+}
+.pcard.featured {
+background: var(–accent);
+border-color: var(–accent);
+}
+.pcard.featured * { color: #0C0C0F !important; }
+.pcard-tag {
+position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+background: var(–accent3); color: #fff;
+padding: 4px 14px; border-radius: 100px;
+font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em;
+text-transform: uppercase; white-space: nowrap;
+}
+.pcard-name {
+font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em;
+text-transform: uppercase; color: var(–muted);
+margin-bottom: 16px;
+}
+.pcard-price {
+font-family: ‘Fraunces’, serif;
+font-size: 3rem; font-weight: 700;
+letter-spacing: -0.03em; line-height: 1;
+margin-bottom: 6px;
+}
+.pcard-price sup { font-size: 1.4rem; font-weight: 400; }
+.pcard-period { color: var(–muted); font-size: 0.85rem; margin-bottom: 28px; }
+.pcard-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.pcard-features li {
+display: flex; align-items: flex-start; gap: 10px;
+font-size: 0.88rem; color: var(–muted);
+}
+.pcard-features li::before { content: ‘✓’; color: var(–accent); font-weight: 700; flex-shrink: 0; }
+.pcard.featured .pcard-features li::before { color: #0C0C0F; }
+.pcard-btn {
+display: block; text-align: center;
+padding: 13px; border-radius: 100px;
+font-weight: 700; font-size: 0.9rem;
+text-decoration: none;
+transition: opacity 0.2s, transform 0.15s;
+}
+.pcard-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.pcard-btn-dark { background: var(–accent); color: #0C0C0F; }
+.pcard-btn-outline { border: 1px solid var(–border); color: var(–ink); }
+.pcard.featured .pcard-btn { background: #0C0C0F; color: var(–accent); }
+
+/* HOW IT WORKS */
+.steps { display: flex; flex-direction: column; gap: 0; max-width: 680px; margin: 0 auto; }
+.step { display: grid; grid-template-columns: 60px 1fr; gap: 24px; padding: 36px 0; border-bottom: 1px solid var(–border); }
+.step:last-child { border-bottom: none; }
+.step-num {
+font-family: ‘Fraunces’, serif;
+font-size: 2.5rem; font-weight: 700; color: var(–accent);
+line-height: 1;
+}
+.step-title { font-family: ‘Fraunces’, serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
+.step-desc { color: var(–muted); font-size: 0.9rem; line-height: 1.7; }
+
+/* TESTIMONIALS */
+.tgrid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.tcard {
+background: var(–surface); border: 1px solid var(–border);
+border-radius: 20px; padding: 32px 28px;
+transition: transform 0.2s, border-color 0.2s;
+}
+.tcard:hover { transform: translateY(-3px); border-color: rgba(200,241,53,0.2); }
+.tcard-stars { color: var(–accent); font-size: 0.85rem; margin-bottom: 16px; letter-spacing: 2px; }
+.tcard-q { font-size: 0.92rem; color: var(–ink); line-height: 1.75; margin-bottom: 24px; font-weight: 300; font-style: italic; }
+.tcard-author { display: flex; align-items: center; gap: 12px; }
+.tcard-av {
+width: 40px; height: 40px; border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-weight: 700; font-size: 0.9rem; color: #0C0C0F;
+background: var(–accent);
+flex-shrink: 0;
+}
+.tcard-name { font-size: 0.88rem; font-weight: 600; }
+.tcard-score { font-size: 0.78rem; color: var(–accent); }
+
+/* CTA */
+.cta-section {
+padding: 100px 52px; text-align: center;
+position: relative; overflow: hidden;
+}
+.cta-glow {
+position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+width: 600px; height: 300px; border-radius: 50%;
+background: radial-gradient(ellipse, rgba(200,241,53,0.1) 0%, transparent 70%);
+pointer-events: none;
+}
+.cta-section > * { position: relative; }
+.cta-section h2 {
+font-family: ‘Fraunces’, serif;
+font-size: clamp(2.5rem, 6vw, 5rem);
+font-weight: 700; letter-spacing: -0.03em;
+line-height: 1.05; max-width: 700px; margin: 0 auto 20px;
+}
+.cta-section h2 em { font-style: italic; color: var(–accent); }
+.cta-section p { color: var(–muted); font-size: 1rem; margin-bottom: 44px; }
+.cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.btn-wa {
+display: flex; align-items: center; gap: 10px;
+background: #25D366; color: #fff;
+padding: 15px 34px; border-radius: 100px;
+font-weight: 700; font-size: 0.95rem;
+text-decoration: none;
+box-shadow: 0 0 40px rgba(37,211,102,0.25);
+transition: transform 0.15s, box-shadow 0.2s;
+}
+.btn-wa:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(37,211,102,0.35); }
+.btn-wa svg { width: 20px; height: 20px; fill: #fff; }
+
+/* FOOTER */
+footer {
+background: var(–surface);
+border-top: 1px solid var(–border);
+padding: 40px 52px;
+display: flex; justify-content: space-between; align-items: center;
+flex-wrap: wrap; gap: 16px;
+}
+footer .logo { font-size: 1.1rem; }
+footer p { color: var(–muted); font-size: 0.82rem; }
+
+/* WHATSAPP FLOAT */
+.wa-float {
+position: fixed; bottom: 28px; right: 28px; z-index: 200;
+background: #25D366; color: #fff;
+width: 58px; height: 58px; border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+box-shadow: 0 4px 24px rgba(37,211,102,0.4);
+text-decoration: none;
+transition: transform 0.2s, box-shadow 0.2s;
+animation: pulse-wa 2s infinite;
+}
+.wa-float:hover { transform: scale(1.1); box-shadow: 0 6px 32px rgba(37,211,102,0.55); }
+.wa-float svg { width: 28px; height: 28px; fill: #fff; }
+@keyframes pulse-wa {
+0%,100%{ box-shadow: 0 4px 24px rgba(37,211,102,0.4); }
+50%{ box-shadow: 0 4px 48px rgba(37,211,102,0.65); }
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* SCROLL REVEAL */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 900px) {
+nav { padding: 16px 24px; }
+.nav-links { display: none; }
+.hero { padding: 120px 24px 60px; }
+.hero-stats { gap: 28px; flex-wrap: wrap; }
+.section { padding: 70px 24px; }
+.services-grid { grid-template-columns: 1fr; }
+.pricing-grid { grid-template-columns: 1fr; }
+.tgrid { grid-template-columns: 1fr; }
+.cta-section { padding: 70px 24px; }
+footer { flex-direction: column; text-align: center; padding: 32px 24px; }
+.gate-box { width: 90%; max-width: 360px; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+
+<div id="gate">
+  <div class="gate-logo">PTE<span>Solutions</span></div>
+  <div class="gate-sub">Admin Access Required</div>
+  <div class="gate-box">
+    <h2>🔒 Private Site</h2>
+    <p>Enter your password to access and manage your website.</p>
+    <input class="gate-input" id="pwInput" type="password" placeholder="Enter password" autocomplete="off">
+    <button class="gate-btn" onclick="checkPW()">Unlock Site</button>
+    <div class="gate-error" id="pwError">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- MAIN SITE -->
+
+<div id="site">
+
+<!-- NAV -->
+
+<nav>
+  <div class="logo">PTE<span>Solutions</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+  </ul>
+  <a href="https://wa.me/17822039559" target="_blank" class="nav-wa">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Chat on WhatsApp
+  </a>
+</nav>
+
+<!-- HERO -->
+
+<section class="hero">
+  <div class="hero-noise"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-badge">PTE Academic Preparation</div>
+  <h1>Achieve Your<br><span class="line2">Target Score.</span><br><span class="line3">Guaranteed.</span></h1>
+  <p class="hero-desc">Expert coaching, AI-powered mock tests, and personalized study materials — everything you need to ace the PTE Academic exam.</p>
+  <div class="hero-actions">
+    <a href="https://wa.me/17822039559?text=Hi%2C%20I%27m%20interested%20in%20PTE%20prep%20coaching" target="_blank" class="btn-accent">Book Free Consultation</a>
+    <a href="#services" class="btn-ghost">Explore Services</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n">40K+</div><div class="stat-l">Students Coached</div></div>
+    <div class="stat"><div class="stat-n">92%</div><div class="stat-l">First-Attempt Pass Rate</div></div>
+    <div class="stat"><div class="stat-n">79+</div><div class="stat-l">Avg. Overall Score</div></div>
+    <div class="stat"><div class="stat-n">24/7</div><div class="stat-l">WhatsApp Support</div></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+
+<section class="section" id="services">
+  <div class="sec-label reveal">What We Offer</div>
+  <div class="sec-title reveal">Everything you need to <em>pass with confidence.</em></div>
+  <div class="services-grid">
+    <div class="scard reveal">
+      <div class="scard-num">01</div>
+      <div class="scard-icon icon-green">📝</div>
+      <div class="scard-title">Practice Tests & Mock Exams</div>
+      <div class="scard-desc">Full-length timed practice tests that mirror the real PTE Academic exam format. Get comfortable with every question type — from Describe Image to Summarize Written Text.</div>
+      <div class="scard-price">Unlimited Access</div>
+    </div>
+    <div class="scard reveal">
+      <div class="scard-num">02</div>
+      <div class="scard-icon icon-blue">🎓</div>
+      <div class="scard-title">1-on-1 Coaching Sessions</div>
+      <div class="scard-desc">Personal coaching sessions via WhatsApp or video call with a PTE expert. We identify your weak areas and build a targeted study plan just for you.</div>
+      <div class="scard-price">From $250</div>
+    </div>
+    <div class="scard reveal">
+      <div class="scard-num">03</div>
+      <div class="scard-icon icon-orange">📚</div>
+      <div class="scard-title">Study Guides & Materials</div>
+      <div class="scard-desc">Comprehensive, expertly written study guides for all PTE sections — Speaking, Writing, Reading, and Listening. Includes templates, strategies, and vocabulary lists.</div>
+      <div class="scard-price">Included in plans</div>
+    </div>
+    <div class="scard reveal">
+      <div class="scard-num">04</div>
+      <div class="scard-icon icon-purple">🤖</div>
+      <div class="scard-title">AI Scoring & Feedback</div>
+      <div class="scard-desc">Submit your practice responses and receive instant AI-powered scoring that mirrors the official PTE algorithm — with detailed feedback on how to improve.</div>
+      <div class="scard-price">Real-time Results</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+
+<section class="section pricing-section" id="pricing">
+  <div class="sec-label reveal">Simple Pricing</div>
+  <div class="sec-title reveal">Pick a plan that works <em>for you.</em></div>
+  <div class="pricing-grid">
+    <div class="pcard reveal">
+      <div class="pcard-name">Starter</div>
+      <div class="pcard-price"><sup>$</sup>150</div>
+      <div class="pcard-period">One-time payment</div>
+      <ul class="pcard-features">
+        <li>5 Full Mock Tests</li>
+        <li>AI Score Reports</li>
+        <li>Study Guide (1 skill)</li>
+        <li>Email Support</li>
+        <li>7-day Access</li>
+      </ul>
+      <a href="https://wa.me/17822039559?text=Hi%2C%20I%27m%20interested%20in%20the%20Starter%20plan%20%28%24150%29" target="_blank" class="pcard-btn pcard-btn-outline">Get Started →</a>
+    </div>
+    <div class="pcard featured reveal">
+      <div class="pcard-tag">Most Popular</div>
+      <div class="pcard-name">Pro</div>
+      <div class="pcard-price"><sup>$</sup>250</div>
+      <div class="pcard-period">One-time payment</div>
+      <ul class="pcard-features">
+        <li>Unlimited Mock Tests</li>
+        <li>AI Scoring & Feedback</li>
+        <li>Full Study Guide Bundle</li>
+        <li>2x 1-on-1 Coaching Calls</li>
+        <li>WhatsApp Support</li>
+        <li>30-day Access</li>
+      </ul>
+      <a href="https://wa.me/17822039559?text=Hi%2C%20I%27m%20interested%20in%20the%20Pro%20plan%20%28%24250%29" target="_blank" class="pcard-btn">Get Started →</a>
+    </div>
+    <div class="pcard reveal">
+      <div class="pcard-name">Premium</div>
+      <div class="pcard-price"><sup>$</sup>300</div>
+      <div class="pcard-period">One-time payment</div>
+      <ul class="pcard-features">
+        <li>Everything in Pro</li>
+        <li>5x 1-on-1 Coaching Calls</li>
+        <li>Personalised Study Plan</li>
+        <li>Priority WhatsApp Support</li>
+        <li>Score Guarantee*</li>
+        <li>60-day Access</li>
+      </ul>
+      <a href="https://wa.me/17822039559?text=Hi%2C%20I%27m%20interested%20in%20the%20Premium%20plan%20%28%24300%29" target="_blank" class="pcard-btn pcard-btn-dark">Get Started →</a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+
+<section class="section" id="how" style="background:var(--bg);">
+  <div class="sec-label reveal" style="text-align:center">The Process</div>
+  <div class="sec-title reveal" style="margin:0 auto 60px;text-align:center">Four steps to your <em>dream score.</em></div>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">01</div>
+      <div>
+        <div class="step-title">Book a Free Consultation</div>
+        <div class="step-desc">Message us on WhatsApp and we'll assess your current level, discuss your target score, and recommend the right plan for your timeline.</div>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">02</div>
+      <div>
+        <div class="step-title">Get Your Personalised Plan</div>
+        <div class="step-desc">We build a custom study schedule around your exam date, focusing on your weakest areas first for maximum score improvement.</div>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">03</div>
+      <div>
+        <div class="step-title">Practice with AI & Expert Support</div>
+        <div class="step-desc">Take full mock tests, get instant AI feedback, and join your 1-on-1 coaching sessions — all at your own pace with WhatsApp access to your coach.</div>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">04</div>
+      <div>
+        <div class="step-title">Walk In & Ace Your Exam</div>
+        <div class="step-desc">Go into exam day fully prepared, confident, and ready to hit your target score — whether that's 50, 65, 79, or 90+.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+
+<section class="section" id="reviews" style="background:var(--surface);">
+  <div class="sec-label reveal">Student Reviews</div>
+  <div class="sec-title reveal">Real students. <em>Real results.</em></div>
+  <div class="tgrid">
+    <div class="tcard reveal">
+      <div class="tcard-stars">★★★★★</div>
+      <p class="tcard-q">"PTE Solutions changed everything for me. The coaching calls were incredibly focused and the AI mock tests felt exactly like the real exam. I scored 85 and got my PR!"</p>
+      <div class="tcard-author">
+        <div class="tcard-av">A</div>
+        <div><div class="tcard-name">Aisha Patel</div><div class="tcard-score">Score: 85 → PR Visa ✓</div></div>
+      </div>
+    </div>
+    <div class="tcard reveal">
+      <div class="tcard-stars">★★★★★</div>
+      <p class="tcard-q">"I'd tried two other platforms and still couldn't break 65. After 3 weeks with PTE Solutions and their personalised plan, I got 79. Worth every dollar."</p>
+      <div class="tcard-author">
+        <div class="tcard-av" style="background:#3B82F6">J</div>
+        <div><div class="tcard-name">James Okafor</div><div class="tcard-score">Score: 79 → Skilled Migration ✓</div></div>
+      </div>
+    </div>
+    <div class="tcard reveal">
+      <div class="tcard-stars">★★★★★</div>
+      <p class="tcard-q">"The WhatsApp support was a game-changer. I could ask questions any time and always got quick, helpful answers. First attempt, 82 overall. Highly recommend."</p>
+      <div class="tcard-author">
+        <div class="tcard-av" style="background:#FF6B35">S</div>
+        <div><div class="tcard-name">Sofia Nguyen</div><div class="tcard-score">Score: 82 → Student Visa ✓</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="sec-label">Ready to Start?</div>
+  <h2>Your target score is<br><em>one message away.</em></h2>
+  <p>Message us on WhatsApp and we'll get you started today — free consultation, no commitment.</p>
+  <div class="cta-actions">
+    <a href="https://wa.me/17822039559?text=Hi%2C%20I%27m%20interested%20in%20PTE%20coaching%20with%20PTE%20Solutions" target="_blank" class="btn-wa">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Message on WhatsApp
+    </a>
+    <a href="#pricing" class="btn-ghost" style="color:var(--ink)">View Pricing</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+  <div class="logo">PTE<span>Solutions</span></div>
+  <p>© 2026 PTE Solutions. All rights reserved.</p>
+  <p style="color:var(--muted)">📞 <a href="https://wa.me/17822039559" style="color:var(--accent);text-decoration:none">+1 (782) 203-9559</a></p>
+</footer>
+
+<!-- FLOATING WHATSAPP -->
+
+<a href="https://wa.me/17822039559?text=Hi%2C%20I%27m%20interested%20in%20PTE%20coaching" target="_blank" class="wa-float" title="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+</div><!-- /site -->
+
+<script>
+  const CORRECT_PASSWORD = "PTESolutions2026";
+
+  function checkPW() {
+    const val = document.getElementById('pwInput').value;
+    const errEl = document.getElementById('pwError');
+    const box = document.querySelector('.gate-box');
+    if (val === CORRECT_PASSWORD) {
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('site').style.display = 'block';
+      sessionStorage.setItem('pte_unlocked', '1');
+    } else {
+      errEl.style.display = 'block';
+      box.classList.remove('gate-shake');
+      void box.offsetWidth;
+      box.classList.add('gate-shake');
+    }
+  }
+
+  document.getElementById('pwInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPW();
+  });
+
+  // Auto-unlock if already authenticated this session
+  if (sessionStorage.getItem('pte_unlocked') === '1') {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('site').style.display = 'block';
+  }
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => revealObs.observe(el));
+</script>
+
+</body>
+</html>
